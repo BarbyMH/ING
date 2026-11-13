@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrar incidencia · FES Aragón</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <!--header -->
+  <header class="navbar">
+    <span class="marca">Incidencias FES Aragón</span>
+    <nav>
+      <a href="formulario-incidencia.html">Registrar incidencia</a>
+      <a href="#">Mis incidencias</a>
+      <a href="/api/logout">Cerrar sesión</a>
+    </nav>
+  </header>
+
+  <!--contenido -->
+  <main>
+    <section class="tarjeta">
+      <h1>Registrar incidencia</h1>
+
+      <!--
+      los mensajes solo se muestran cuando el backend los envia (HU-01B)
+      <div class="alerta exito">Incidencia registrada. Tu folio es #1.</div>
+      <div class="alerta error">Ocurrió un error al guardar.</div> 
+      -->
+
+      <form action="/api/incidencias" method="post">
+
+        <div class="campo">
+          <label for="descripcion">Descripción *</label>
+          <textarea id="descripcion" name="descripcion" maxlength="500" required></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="ubicacion">Ubicación *</label>
+          <input type="text" id="ubicacion" name="ubicacion"
+                 placeholder="Ej. Edificio A, salón 203" maxlength="100" required>
+        </div>
+
+        <div class="fila">
+          <div class="campo">
+            <label for="tipo">Tipo *</label>
+            <select id="tipo" name="tipo" required>
+              <option value="" selected disabled>Selecciona...</option>
+              <option>Luminaria</option>
+              <option>Butaca</option>
+              <option>Fuga</option>
+              <option>Proyector</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="prioridad">Prioridad *</label>
+            <select id="prioridad" name="prioridad" required>
+              <option value="" selected disabled>Selecciona...</option>
+              <option>Alta</option>
+              <option>Media</option>
+              <option>Baja</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="boton">Enviar incidencia</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- footer -->
+  <footer>
+    Sistema de reporte de incidencias · FES Aragón · Ingeniería en Computación
+  </footer>
+
+</body>
+</html>
