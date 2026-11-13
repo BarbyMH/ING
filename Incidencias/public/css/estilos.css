@@ -1,0 +1,124 @@
+/* ===== Estilos comunes del sistema de incidencias ===== */
+:root {
+  --azul: #0d47a1;
+  --azul-claro: #1565c0;
+  --fondo: #f5f7fa;
+  --texto: #212529;
+  --gris: #6c757d;
+  --borde: #ced4da;
+  --error: #dc3545;
+  --exito: #198754;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Lo usa el script del login para mostrar/ocultar la alerta */
+.d-none { display: none !important; }
+
+/* ----- Barra de navegación ----- */
+.navbar {
+  background: var(--azul);
+  color: #fff;
+  padding: 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.navbar .marca { font-weight: 600; font-size: 1.1rem; }
+.navbar nav { display: flex; flex-wrap: wrap; gap: 16px; }
+.navbar a { color: #fff; text-decoration: none; }
+.navbar a:hover { text-decoration: underline; }
+
+/* ----- Contenido y pie ----- */
+main { flex: 1; width: 100%; max-width: 960px; margin: 24px auto; padding: 0 16px; }
+footer { text-align: center; padding: 16px; font-size: .85rem; color: var(--gris); border-top: 1px solid var(--borde); background: #fff; }
+
+/* Login y registro: la tarjeta queda centrada entre el encabezado y el pie */
+main.centrado { display: flex; align-items: center; }
+
+/* ----- Tarjeta y formulario ----- */
+.tarjeta {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 28px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+}
+.tarjeta.angosta { max-width: 420px; }
+.tarjeta h1 { margin-top: 0; font-size: 1.4rem; }
+
+.campo { margin-bottom: 16px; }
+.campo label { display: block; margin-bottom: 6px; font-weight: 600; }
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background: #fff;
+}
+.campo textarea { resize: vertical; min-height: 100px; }
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus { outline: 2px solid var(--azul-claro); border-color: var(--azul-claro); }
+
+/* Se marca en rojo solo después de que el usuario escribió algo inválido o intentó enviar */
+.campo input:user-invalid,
+.campo select:user-invalid,
+.campo textarea:user-invalid { border-color: var(--error); }
+
+.fila { display: flex; gap: 16px; }
+.fila .campo { flex: 1; }
+
+/* ----- Botones ----- */
+.boton,
+.boton-secundario {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.boton { color: #fff; background: var(--azul-claro); border: 0; }
+.boton:hover { background: var(--azul); }
+.boton-secundario { margin-top: 12px; color: var(--gris); background: transparent; border: 1px solid var(--borde); }
+.boton-secundario:hover { background: var(--fondo); }
+
+/* ----- Alertas ----- */
+.alerta { padding: 12px 14px; border-radius: 6px; margin-bottom: 16px; }
+.alerta.exito { background: #d1e7dd; color: #0f5132; }
+.alerta.error { background: #f8d7da; color: #842029; }
+
+/* ----- Etiquetas de estado (para lista y HU-07) ----- */
+.estado { padding: 3px 10px; border-radius: 12px; font-size: .8rem; font-weight: 600; }
+.estado.pendiente { background: #ffc107; color: #000; }
+.estado.asignada  { background: #0dcaf0; color: #000; }
+.estado.proceso   { background: #0d6efd; color: #fff; }
+.estado.resuelta  { background: #198754; color: #fff; }
+
+/* ----- Celular ----- */
+@media (max-width: 600px) {
+  .fila { flex-direction: column; gap: 0; }
+  .tarjeta { padding: 20px; }
+}
