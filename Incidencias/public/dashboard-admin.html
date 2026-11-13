@@ -9,14 +9,14 @@
 <body>
 
     <!-- Encabezado -->
-    <header class="header">
-        <h1>Incidencias FES Aragón</h1>
-        <nav class="nav-links">
-            <a href="#">Panel Administrador</a>
-            <a href="#">Reportes</a>
-            <a href="#">Cerrar sesión</a>
-        </nav>
-    </header>
+  <header class="navbar">
+    <span class="marca">Incidencias FES Aragón</span>
+    <nav>
+      <a href="Panel de administrador.html">Panel Administrador</a>
+      <a href="#">Reportes</a>
+      <a href="/api/logout">Cerrar sesión</a>
+    </nav>
+  </header>
 
     <!-- Contenedor Principal -->
     <main class="main-container">
@@ -31,38 +31,42 @@
                     <th>Ubicación</th>
                     <th>Fecha</th>
                     <th>Estado</th>
+                    <th>Responsable</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>#INC-0101</strong></td>
-                    <td>El proyector no enciende y hace ruido extraño.</td>
-                    <td>Edificio A, salón 203</td>
-                    <td>12/11/2026</td>
-                    <td><span class="badge pendiente">Pendiente</span></td>
+                    <td class="folio"><strong>#INC-0101</strong></td>
+                    <td class="descripcion">El proyector no enciende y hace ruido extraño.</td>
+                    <td class="ubicacion">Edificio A, salón 203</td>
+                    <td class="fecha">12/11/2026</td>
+                    <td class="estado-celda"><span class="badge pendiente">Pendiente</span></td>
+                    <td class="responsable">Sin asignar</td>
                     <td>
                         <button class="btn btn-editar">Editar</button>
                         <button class="btn btn-borrar">Borrar</button>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>#INC-0102</strong></td>
-                    <td>Fuga de agua en el lavabo de hombres.</td>
-                    <td>Edificio B, Baños PB</td>
-                    <td>11/11/2026</td>
-                    <td><span class="badge proceso">En proceso</span></td>
+                    <td class="folio"><strong>#INC-0102</strong></td>
+                    <td class="descripcion">Fuga de agua en el lavabo de hombres.</td>
+                    <td class="ubicacion">Edificio B, Baños PB</td>
+                    <td class="fecha">11/11/2026</td>
+                    <td class="estado-celda"><span class="badge proceso">En proceso</span></td>
+                    <td class="responsable">Carlos López</td>
                     <td>
                         <button class="btn btn-editar">Editar</button>
                         <button class="btn btn-borrar">Borrar</button>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>#INC-0103</strong></td>
-                    <td>Falta conexión a internet en las computadoras de la fila 3.</td>
-                    <td>Centro de Cómputo 1</td>
-                    <td>10/11/2026</td>
-                    <td><span class="badge resuelto">Resuelto</span></td>
+                    <td class="folio"><strong>#INC-0103</strong></td>
+                    <td class="descripcion">Falta conexión a internet en las computadoras de la fila 3.</td>
+                    <td class="ubicacion">Centro de Cómputo 1</td>
+                    <td class="fecha">10/11/2026</td>
+                    <td class="estado-celda"><span class="badge resuelto">Resuelto</span></td>
+                    <td class="responsable">Ana Torres</td>
                     <td>
                         <button class="btn btn-editar">Editar</button>
                         <button class="btn btn-borrar">Borrar</button>
@@ -76,6 +80,38 @@
     <footer class="footer">
         Sistema de reporte de incidencias · FES Aragón · Ingeniería en Computación
     </footer>
+
+    <!-- ================= MODAL DE DETALLE Y ASIGNACIÓN ================= -->
+    <div id="modal-detalle" class="modal d-none">
+        <div class="tarjeta modal-contenido">
+            <span class="cerrar-modal" id="btn-cerrar">&times;</span>
+            <h2 id="modal-folio">#INC-XXXX</h2>
+            
+            <div style="margin-bottom: 15px;">
+                <p><strong>Ubicación:</strong> <span id="modal-ubicacion"></span></p>
+                <p><strong>Fecha:</strong> <span id="modal-fecha"></span></p>
+                <p><strong>Estado:</strong> <span id="modal-estado"></span></p>
+                <p><strong>Descripción de la falla:</strong></p>
+                <div class="descripcion-box" id="modal-descripcion"></div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--borde); margin: 20px 0;">
+
+            <h3>Asignar Personal de Mantenimiento</h3>
+            <div class="campo">
+                <label for="select-personal">Selecciona al responsable:</label>
+                <select id="select-personal">
+                    <option value="Sin asignar">-- Sin asignar --</option>
+                    <option value="Juan Pérez">Juan Pérez (Electricidad)</option>
+                    <option value="María Gómez">María Gómez (Plomería)</option>
+                    <option value="Carlos López">Carlos López (Plomería)</option>
+                    <option value="Ana Torres">Ana Torres (Soporte TI)</option>
+                </select>
+            </div>
+            
+            <button id="btn-guardar-asignacion" class="boton">Guardar Asignación</button>
+        </div>
+    </div>
 
     <!-- Enlace al archivo JavaScript -->
     <script src="js/app.js"></script>

@@ -1,112 +1,91 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const tableBody = document.querySelector('#tabla-incidencias tbody');
+    // --- Referencias al DOM ---
+    const tabla = document.getElementById('tabla-incidencias');
+    const filas = tabla.querySelectorAll('tbody tr');
+    
+    const modal = document.getElementById('modal-detalle');
+    const btnCerrar = document.getElementById('btn-cerrar');
+    const btnGuardarAsignacion = document.getElementById('btn-guardar-asignacion');
+    const selectPersonal = document.getElementById('select-personal');
 
-    // Usamos delegación de eventos para capturar los clics en los botones
-    tableBody.addEventListener('click', (e) => {
-        const target = e.target;
-        const row = target.closest('tr');
+    // Campos del Modal
+    const modalFolio = document.getElementById('modal-folio');
+    const modalUbicacion = document.getElementById('modal-ubicacion');
+    const modalFecha = document.getElementById('modal-fecha');
+    const modalEstado = document.getElementById('modal-estado');
+    const modalDescripcion = document.getElementById('modal-descripcion');
 
-        // BORRAR FILA
-        if (target.classList.contains('btn-borrar')) {
-            if (confirm('¿Estás seguro de que deseas borrar esta incidencia?')) {
-                row.remove();
+    let filaActual = null; // Variable para saber qué fila estamos editando
+
+    // --- 1. Evento para abrir el modal al hacer clic en una fila ---
+    filas.forEach(fila => {
+        fila.addEventListener('click', (evento) => {
+            // Evitamos abrir el modal si el usuario hizo clic en los botones "Editar" o "Borrar"
+            if (evento.target.tagName.toLowerCase() === 'button') {
+                return; 
             }
-        }
 
-        // ACTIVAR MODO EDICIÓN
-        if (target.classList.contains('btn-editar')) {
-            const descCell = row.cells[1];
-            const ubiCell = row.cells[2];
-            const fechaCell = row.cells[3];
-            const estadoCell = row.cells[4];
-            const accionesCell = row.cells[5];
+            filaActual = fila; // Guardamos la fila seleccionada
 
-            // Guardamos los valores actuales por si el usuario presiona "Cancelar"
-            row.dataset.desc = descCell.innerText;
-            row.dataset.ubi = ubiCell.innerText;
-            row.dataset.fecha = fechaCell.innerText;
-            row.dataset.estado = estadoCell.innerText.trim();
+            // Extraemos la información de las celdas (td) de la fila clickeada
+            const folio = fila.querySelector('.folio').innerText;
+            const descripcion = fila.querySelector('.descripcion').innerText;
+            const ubicacion = fila.querySelector('.ubicacion').innerText;
+            const fecha = fila.querySelector('.fecha').innerText;
+            const estadoHTML = fila.querySelector('.estado-celda').innerHTML;
+            const responsableActual = fila.querySelector('.responsable').innerText;
 
-            // Reemplazamos el texto por inputs
-            descCell.innerHTML = `<input type="text" class="edit-input" value="${row.dataset.desc}">`;
-            ubiCell.innerHTML = `<input type="text" class="edit-input" value="${row.dataset.ubi}">`;
-            fechaCell.innerHTML = `<input type="date" class="edit-input" value="${formatearFechaParaInput(row.dataset.fecha)}">`;
+            // Poblamos el Modal con la información
+            modalFolio.innerText = folio;
+            modalDescripcion.innerText = descripcion;
+            modalUbicacion.innerText = ubicacion;
+            modalFecha.innerText = fecha;
+            modalEstado.innerHTML = estadoHTML; // Mantiene el span del badge
             
-            // Reemplazamos el badge por un select
-            estadoCell.innerHTML = `
-                <select class="edit-input">
-                    <option value="Pendiente" ${row.dataset.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                    <option value="En proceso" ${row.dataset.estado === 'En proceso' ? 'selected' : ''}>En proceso</option>
-                    <option value="Resuelto" ${row.dataset.estado === 'Resuelto' ? 'selected' : ''}>Resuelto</option>
-                </select>
-            `;
+            // Actualizamos el <select> si ya había alguien asignado, si no existe lo deja en "Sin asignar"
+            const opcionExiste = Array.from(selectPersonal.options).some(opt => opt.value === responsableActual);
+            if(opcionExiste) {
+                selectPersonal.value = responsableActual;
+            } else {
+                selectPersonal.value = "Sin asignar";
+            }
 
-            // Cambiamos los botones
-            accionesCell.innerHTML = `
-                <button class="btn btn-guardar">Guardar</button>
-                <button class="btn btn-cancelar">Cancelar</button>
-            `;
-        }
+            // Mostramos el modal
+            modal.classList.remove('d-none');
+        });
+    });
 
-        // GUARDAR CAMBIOS
-        if (target.classList.contains('btn-guardar')) {
-            const descVal = row.cells[1].querySelector('input').value;
-            const ubiVal = row.cells[2].querySelector('input').value;
-            const fechaVal = row.cells[3].querySelector('input').value;
-            const estadoVal = row.cells[4].querySelector('select').value;
+    // --- 2. Funciones para cerrar el Modal ---
+    const cerrarModal = () => {
+        modal.classList.add('d-none');
+        filaActual = null;
+    };
 
-            row.cells[1].innerText = descVal;
-            row.cells[2].innerText = ubiVal;
-            row.cells[3].innerText = formatearFechaParaMostrar(fechaVal);
-            
-            row.cells[4].innerHTML = generarBadge(estadoVal);
+    btnCerrar.addEventListener('click', cerrarModal);
 
-            // Restauramos los botones
-            row.cells[5].innerHTML = `
-                <button class="btn btn-editar">Editar</button>
-                <button class="btn btn-borrar">Borrar</button>
-            `;
-        }
-
-        // CANCELAR EDICIÓN
-        if (target.classList.contains('btn-cancelar')) {
-            row.cells[1].innerText = row.dataset.desc;
-            row.cells[2].innerText = row.dataset.ubi;
-            row.cells[3].innerText = row.dataset.fecha;
-            row.cells[4].innerHTML = generarBadge(row.dataset.estado);
-
-            // Restauramos los botones
-            row.cells[5].innerHTML = `
-                <button class="btn btn-editar">Editar</button>
-                <button class="btn btn-borrar">Borrar</button>
-            `;
+    // Cerrar si se hace clic fuera de la tarjeta blanca (en el fondo oscuro)
+    modal.addEventListener('click', (evento) => {
+        if (evento.target === modal) {
+            cerrarModal();
         }
     });
 
-    // Funciones auxiliares para el formato de etiquetas y fechas
-    function generarBadge(estado) {
-        let badgeClass = '';
-        if (estado === 'Pendiente') badgeClass = 'pendiente';
-        if (estado === 'En proceso') badgeClass = 'proceso';
-        if (estado === 'Resuelto') badgeClass = 'resuelto';
-        return `<span class="badge ${badgeClass}">${estado}</span>`;
-    }
+    // --- 3. Evento para guardar la asignación ---
+    btnGuardarAsignacion.addEventListener('click', () => {
+        if (filaActual) {
+            const nuevoResponsable = selectPersonal.value;
+            
+            // Actualizar la celda "Responsable" de la tabla
+            filaActual.querySelector('.responsable').innerText = nuevoResponsable;
 
-    // Convierte DD/MM/YYYY a YYYY-MM-DD para el <input type="date">
-    function formatearFechaParaInput(fechaStr) {
-        if (fechaStr.includes('/')) {
-            const [dia, mes, anio] = fechaStr.split('/');
-            return `${anio}-${mes}-${dia}`;
-        }
-        return fechaStr;
-    }
+            // (Opcional) Cambiar el estado a 'Asignado/En proceso' automáticamente si es "Pendiente"
+            const celdaEstado = filaActual.querySelector('.estado-celda');
+            if (nuevoResponsable !== "Sin asignar" && celdaEstado.innerText.includes("Pendiente")) {
+                celdaEstado.innerHTML = '<span class="badge proceso">En proceso</span>';
+            }
 
-    // Convierte YYYY-MM-DD de vuelta a DD/MM/YYYY para mostrar en la tabla
-    function formatearFechaParaMostrar(fechaStr) {
-        if (fechaStr.includes('-')) {
-            const [anio, mes, dia] = fechaStr.split('-');
-            return `${dia}/${mes}/${anio}`;
+            // Cerrar el modal
+            cerrarModal();
         }
-        return fechaStr;
-    }
+    });
 });
