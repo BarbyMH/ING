@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador - Incidencias FES Aragón</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header class="header">
+        <h1>Incidencias FES Aragón</h1>
+        <nav class="nav-links">
+            <a href="#">Panel Administrador</a>
+            <a href="#">Reportes</a>
+            <a href="#">Cerrar sesión</a>
+        </nav>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="main-container">
+        <h2>Lista de incidencias (Administración)</h2>
+        
+        <!-- Tabla -->
+        <table id="tabla-incidencias">
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Descripción</th>
+                    <th>Ubicación</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#INC-0101</strong></td>
+                    <td>El proyector no enciende y hace ruido extraño.</td>
+                    <td>Edificio A, salón 203</td>
+                    <td>12/11/2026</td>
+                    <td><span class="badge pendiente">Pendiente</span></td>
+                    <td>
+                        <button class="btn btn-editar">Editar</button>
+                        <button class="btn btn-borrar">Borrar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#INC-0102</strong></td>
+                    <td>Fuga de agua en el lavabo de hombres.</td>
+                    <td>Edificio B, Baños PB</td>
+                    <td>11/11/2026</td>
+                    <td><span class="badge proceso">En proceso</span></td>
+                    <td>
+                        <button class="btn btn-editar">Editar</button>
+                        <button class="btn btn-borrar">Borrar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#INC-0103</strong></td>
+                    <td>Falta conexión a internet en las computadoras de la fila 3.</td>
+                    <td>Centro de Cómputo 1</td>
+                    <td>10/11/2026</td>
+                    <td><span class="badge resuelto">Resuelto</span></td>
+                    <td>
+                        <button class="btn btn-editar">Editar</button>
+                        <button class="btn btn-borrar">Borrar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        Sistema de reporte de incidencias · FES Aragón · Ingeniería en Computación
+    </footer>
+
+    <!-- Enlace al archivo JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>

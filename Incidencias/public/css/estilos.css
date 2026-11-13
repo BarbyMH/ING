@@ -10,7 +10,7 @@
   --exito: #198754;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; } /* Corregido el guion '-' por '*' para que aplique a todo */
 
 body {
   margin: 0;
@@ -121,4 +121,102 @@ main.centrado { display: flex; align-items: center; }
 @media (max-width: 600px) {
   .fila { flex-direction: column; gap: 0; }
   .tarjeta { padding: 20px; }
+}
+
+
+/* =====================================================================
+   ===== Estilos añadidos para la vista del Administrador (Tabla) ====== 
+   ===================================================================== */
+
+/* Tabla de incidencias */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 14px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #f8f9fa;
+  color: var(--texto);
+  font-weight: 600;
+}
+
+tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Etiquetas de estado de la tabla (Usando la estructura de .badge solicitada anteriormente) */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+.badge.pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.badge.proceso {
+  background-color: #cce5ff;
+  color: #004085;
+}
+.badge.resuelto {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Botones de acción en la tabla (Editar, Borrar, Guardar, Cancelar) */
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: white;
+  margin-right: 5px;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn-editar {
+  background-color: var(--azul); 
+}
+
+.btn-borrar {
+  background-color: var(--error);
+}
+
+.btn-guardar {
+  background-color: var(--exito);
+}
+
+.btn-cancelar {
+  background-color: var(--gris);
+}
+
+/* Campos de texto y selectores al editar dinámicamente en la tabla */
+.edit-input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+select.edit-input {
+  cursor: pointer;
 }
