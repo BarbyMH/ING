@@ -10,6 +10,31 @@ const incidenciaController = {
         });
     },
 
+    // Crear nueva incidencia (HU-03)
+    crearIncidencia: function(req, res) {
+        const { titulo, descripcion, categoria } = req.body;
+        const idUsuario = req.session.usuario ? req.session.usuario.id : null;
+
+        if (!idUsuario) {
+            return res.status(401).json({ error: 'No autorizado o sesión expirada' });
+        }
+
+        if (!titulo || !descripcion || !categoria) {
+            return res.status(400).json({ error: 'Faltan datos obligatorios (título, descripción o categoría)' });
+        }
+
+        IncidenciaModel.crear(titulo, descripcion, categoria, idUsuario, function(err) {
+            if (err) {
+                return res.status(500).json({ error: 'Error al registrar la incidencia en la base de datos' });
+            }
+            res.status(201).json({ 
+                success: true, 
+                message: 'Incidencia creada correctamente', 
+                id: this.lastID 
+            });
+        });
+    },
+
     listarPorResponsable: function(req, res) {
         const responsableNombre = req.session.usuario ? req.session.usuario.nombre : null;
         if (!responsableNombre) {

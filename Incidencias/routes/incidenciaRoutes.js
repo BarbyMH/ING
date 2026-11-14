@@ -3,14 +3,15 @@ const router = express.Router();
 const incidenciaController = require('../controllers/incidenciaController');
 const { verificarRol } = require('../middlewares/authMiddleware');
 
-// Obtener lista de incidencias
+// Rutas de administración
 router.get('/incidencias', verificarRol('ADMINISTRADOR'), incidenciaController.listarIncidencias);
-
-// Guardar asignación de responsable
 router.post('/incidencias/asignar', verificarRol('ADMINISTRADOR'), incidenciaController.guardarAsignacion);
 
-//Ruta para asignaciones-personal de Mantenimiento
+// Rutas de mantenimiento
 router.get('/mis-asignaciones', verificarRol('MANTENIMIENTO'), incidenciaController.listarPorResponsable);
-//Ruta para cambiar de estado
 router.put('/incidencias/estado', verificarRol('MANTENIMIENTO'), incidenciaController.actualizarEstado);
+
+// Rutas de Alumnos y Profesores
+router.post('/incidencias', verificarRol('ALUMNO_PROFESOR'), incidenciaController.crearIncidencia);
+
 module.exports = router;
