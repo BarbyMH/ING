@@ -9,4 +9,6 @@ router.get('/incidencias', verificarRol('ADMINISTRADOR'), incidenciaController.l
 // Guardar asignación de responsable
 router.post('/incidencias/asignar', verificarRol('ADMINISTRADOR'), incidenciaController.guardarAsignacion);
 
+//Ruta para asignaciones-personal de Mantenimiento
+router.get('/mis-asignaciones', verificarRol('MANTENIMIENTO'), incidenciaController.listarPorResponsable);
 module.exports = router;

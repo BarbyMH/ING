@@ -12,13 +12,17 @@ const IncidenciaModel = {
         const query = `SELECT * FROM incidencias`;
         db.all(query, [], callback);
     },
-
-
-// Asignar responsable (HU-04A / HU-04B)
+    // Asignar responsable
     asignarResponsable: (idIncidencia, responsable, callback) => {
         const query = `UPDATE incidencias SET responsable = ? WHERE id = ?`;
         db.run(query, [responsable, idIncidencia], callback);
+    },
+    //Obtener incidencias asignadas a un responsable especifico
+    porResponsable: (responsable, callback) => {
+        const query = `SELECT * FROM incidencias WHERE responsable = ?`;
+        db.all(query, [responsable], callback);
     }
+
 };
 
 module.exports = IncidenciaModel;

@@ -10,7 +10,20 @@ const incidenciaController = {
         });
     },
 
-//Guardar asignaciones de responsables
+    listarPorResponsable: (req, res) => {
+        const responsableNombre = req.session.usuario ? req.session.usuario.nombre : null;
+        if (!responsableNombre) {
+            return res.status(401).json({ error: 'No autorizado o sesión expirada' });
+        }
+        IncidenciaModel.porResponsable(responsableNombre, (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al obtener las asignaciones' });
+            }
+            res.json(rows);
+        });
+    },
+
+    // Guardar asignaciones de responsables
     guardarAsignacion: (req, res) => {
         const { idIncidencia, responsable } = req.body;
 
