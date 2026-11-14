@@ -13,7 +13,8 @@ const IncidenciaModel = {
         db.all(query, [], callback);
     },
 
-    // Asignar responsable (HU-04A / HU-04B)
+
+// Asignar responsable (HU-04A / HU-04B)
     asignarResponsable: (idIncidencia, responsable, callback) => {
         const query = `UPDATE incidencias SET responsable = ? WHERE id = ?`;
         db.run(query, [responsable, idIncidencia], callback);

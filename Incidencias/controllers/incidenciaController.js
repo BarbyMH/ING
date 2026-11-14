@@ -10,6 +10,7 @@ const incidenciaController = {
         });
     },
 
+//Guardar asignaciones de responsables
     guardarAsignacion: (req, res) => {
         const { idIncidencia, responsable } = req.body;
 
