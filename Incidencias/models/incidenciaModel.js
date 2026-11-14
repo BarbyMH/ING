@@ -7,27 +7,29 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 const IncidenciaModel = {
-    // Obtener todas las incidencias (para admin)
+    // Obtener todas las incidencias (para el panel del administrador)
     todas: (callback) => {
         const query = `SELECT * FROM incidencias`;
         db.all(query, [], callback);
     },
-    // Asignar responsable
+
+    // Asignar un responsable a una incidencia
     asignarResponsable: (idIncidencia, responsable, callback) => {
         const query = `UPDATE incidencias SET responsable = ? WHERE id = ?`;
         db.run(query, [responsable, idIncidencia], callback);
     },
-    //Obtener incidencias asignadas a un responsable especifico
+
+    // Obtener incidencias filtradas por el responsable activo
     porResponsable: (responsable, callback) => {
         const query = `SELECT * FROM incidencias WHERE responsable = ?`;
         db.all(query, [responsable], callback);
     },
-    //Actualizar el estado de la incidencia
-    actualizarEstado: (idIncidencia, nuevoEstado, callback) => {
-        const query = `UPDATE incidencias SET estado = ? WHERE id = ?`;
-        db.run(query, [nuevoEstado, idIncidencia], callback);
-    }
 
+    // Actualizar el estado y la fecha de actualización automáticamente
+    actualizarEstado: (idIncidencia, estado, callback) => {
+        const query = `UPDATE incidencias SET estado = ?, fecha_actualizacion = CURRENT_TIMESTAMP WHERE id = ?`;
+        db.run(query, [estado, idIncidencia], callback);
+    }
 };
 
 module.exports = IncidenciaModel;
