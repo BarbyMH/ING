@@ -4,6 +4,8 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const { verificarRol } = require('./middlewares/authMiddleware');
 
+const incidenciaRoutes = require('./routes/incidenciaRoutes');
+
 const app = express();
 const PORT = 3000;
 
@@ -20,6 +22,7 @@ app.use(session({
 
 // Rutas de Autenticación
 app.use('/api', authRoutes);
+app.use('/api', incidenciaRoutes);
 
 // --- RUTAS PROTEGIDAS POR ROL ---
 app.get('/dashboard-admin.html', verificarRol('ADMINISTRADOR'), (req, res) => {
