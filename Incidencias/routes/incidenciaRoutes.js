@@ -11,4 +11,6 @@ router.post('/incidencias/asignar', verificarRol('ADMINISTRADOR'), incidenciaCon
 
 //Ruta para asignaciones-personal de Mantenimiento
 router.get('/mis-asignaciones', verificarRol('MANTENIMIENTO'), incidenciaController.listarPorResponsable);
+//Ruta para cambiar de estado
+router.put('/incidencias/estado', verificarRol('MANTENIMIENTO'), incidenciaController.actualizarEstado);
 module.exports = router;

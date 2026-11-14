@@ -21,6 +21,11 @@ const IncidenciaModel = {
     porResponsable: (responsable, callback) => {
         const query = `SELECT * FROM incidencias WHERE responsable = ?`;
         db.all(query, [responsable], callback);
+    },
+    //Actualizar el estado de la incidencia
+    actualizarEstado: (idIncidencia, nuevoEstado, callback) => {
+        const query = `UPDATE incidencias SET estado = ? WHERE id = ?`;
+        db.run(query, [nuevoEstado, idIncidencia], callback);
     }
 
 };
