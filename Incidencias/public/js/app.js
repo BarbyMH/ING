@@ -1,56 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Referencias al DOM ---
     const tabla = document.getElementById('tabla-incidencias');
     const filas = tabla.querySelectorAll('tbody tr');
     
     const modal = document.getElementById('modal-detalle');
     const btnCerrar = document.getElementById('btn-cerrar');
-    const btnGuardarAsignacion = document.getElementById('btn-guardar-asignacion');
+    const btnGuardar = document.getElementById('btn-guardar-cambios');
+
+    // Referencias a los inputs del Modal
+    const modalFolio = document.getElementById('modal-folio');
+    const inputDescripcion = document.getElementById('input-descripcion');
+    const inputUbicacion = document.getElementById('input-ubicacion');
+    const inputFecha = document.getElementById('input-fecha');
+    const selectEstado = document.getElementById('select-estado');
     const selectPersonal = document.getElementById('select-personal');
 
-    // Campos del Modal
-    const modalFolio = document.getElementById('modal-folio');
-    const modalUbicacion = document.getElementById('modal-ubicacion');
-    const modalFecha = document.getElementById('modal-fecha');
-    const modalEstado = document.getElementById('modal-estado');
-    const modalDescripcion = document.getElementById('modal-descripcion');
-
-    let filaActual = null; // Variable para saber qué fila estamos editando
+    let filaActual = null; // Guarda la fila que se está editando
 
     // --- 1. Evento para abrir el modal al hacer clic en una fila ---
     filas.forEach(fila => {
-        fila.addEventListener('click', (evento) => {
-            // Evitamos abrir el modal si el usuario hizo clic en los botones "Editar" o "Borrar"
-            if (evento.target.tagName.toLowerCase() === 'button') {
-                return; 
-            }
+        fila.addEventListener('click', () => {
+            filaActual = fila;
 
-            filaActual = fila; // Guardamos la fila seleccionada
-
-            // Extraemos la información de las celdas (td) de la fila clickeada
+            // Extraemos la información actual de las celdas de la tabla
             const folio = fila.querySelector('.folio').innerText;
             const descripcion = fila.querySelector('.descripcion').innerText;
             const ubicacion = fila.querySelector('.ubicacion').innerText;
             const fecha = fila.querySelector('.fecha').innerText;
-            const estadoHTML = fila.querySelector('.estado-celda').innerHTML;
-            const responsableActual = fila.querySelector('.responsable').innerText;
+            const estadoTexto = fila.querySelector('.estado-celda').innerText.trim();
+            const responsableActual = fila.querySelector('.responsable').innerText.trim();
 
-            // Poblamos el Modal con la información
+            // Poblamos el formulario del Modal
             modalFolio.innerText = folio;
-            modalDescripcion.innerText = descripcion;
-            modalUbicacion.innerText = ubicacion;
-            modalFecha.innerText = fecha;
-            modalEstado.innerHTML = estadoHTML; // Mantiene el span del badge
+            inputDescripcion.value = descripcion;
+            inputUbicacion.value = ubicacion;
+            inputFecha.value = fecha;
             
-            // Actualizamos el <select> si ya había alguien asignado, si no existe lo deja en "Sin asignar"
+            // Asignar el estado actual en el select
+            selectEstado.value = estadoTexto;
+            
+            // Asignar el responsable actual en el select o dejar en "Sin asignar"
             const opcionExiste = Array.from(selectPersonal.options).some(opt => opt.value === responsableActual);
-            if(opcionExiste) {
-                selectPersonal.value = responsableActual;
-            } else {
-                selectPersonal.value = "Sin asignar";
-            }
+            selectPersonal.value = opcionExiste ? responsableActual : "Sin asignar";
 
-            // Mostramos el modal
+            // Mostrar el modal
             modal.classList.remove('d-none');
         });
     });
@@ -62,29 +54,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     btnCerrar.addEventListener('click', cerrarModal);
-
-    // Cerrar si se hace clic fuera de la tarjeta blanca (en el fondo oscuro)
     modal.addEventListener('click', (evento) => {
         if (evento.target === modal) {
             cerrarModal();
         }
     });
 
-    // --- 3. Evento para guardar la asignación ---
-    btnGuardarAsignacion.addEventListener('click', () => {
+    // --- 3. Evento para guardar todos los cambios en la tabla ---
+    btnGuardar.addEventListener('click', () => {
         if (filaActual) {
-            const nuevoResponsable = selectPersonal.value;
-            
-            // Actualizar la celda "Responsable" de la tabla
-            filaActual.querySelector('.responsable').innerText = nuevoResponsable;
+            // Actualizamos los textos en la tabla con lo modificado en el modal
+            filaActual.querySelector('.descripcion').innerText = inputDescripcion.value;
+            filaActual.querySelector('.ubicacion').innerText = inputUbicacion.value;
+            filaActual.querySelector('.fecha').innerText = inputFecha.value;
+            filaActual.querySelector('.responsable').innerText = selectPersonal.value;
 
-            // (Opcional) Cambiar el estado a 'Asignado/En proceso' automáticamente si es "Pendiente"
+            // Actualizamos el estado y su etiqueta visual (badge) correspondiente
+            const nuevoEstado = selectEstado.value;
             const celdaEstado = filaActual.querySelector('.estado-celda');
-            if (nuevoResponsable !== "Sin asignar" && celdaEstado.innerText.includes("Pendiente")) {
-                celdaEstado.innerHTML = '<span class="badge proceso">En proceso</span>';
-            }
+            
+            let claseBadge = 'pendiente';
+            if (nuevoEstado === 'En proceso') claseBadge = 'proceso';
+            if (nuevoEstado === 'Resuelto') claseBadge = 'resuelto';
+            
+            celdaEstado.innerHTML = `<span class="badge ${claseBadge}">${nuevoEstado}</span>`;
 
-            // Cerrar el modal
+            // Cerramos la ventana modal
             cerrarModal();
         }
     });

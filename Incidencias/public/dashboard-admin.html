@@ -22,7 +22,7 @@
     <main class="main-container">
         <h2>Lista de incidencias (Administración)</h2>
         
-        <!-- Tabla -->
+        <!-- Tabla (Sin botones de acciones) -->
         <table id="tabla-incidencias">
             <thead>
                 <tr>
@@ -32,7 +32,6 @@
                     <th>Fecha</th>
                     <th>Estado</th>
                     <th>Responsable</th>
-                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,10 +42,6 @@
                     <td class="fecha">12/11/2026</td>
                     <td class="estado-celda"><span class="badge pendiente">Pendiente</span></td>
                     <td class="responsable">Sin asignar</td>
-                    <td>
-                        <button class="btn btn-editar">Editar</button>
-                        <button class="btn btn-borrar">Borrar</button>
-                    </td>
                 </tr>
                 <tr>
                     <td class="folio"><strong>#INC-0102</strong></td>
@@ -55,10 +50,6 @@
                     <td class="fecha">11/11/2026</td>
                     <td class="estado-celda"><span class="badge proceso">En proceso</span></td>
                     <td class="responsable">Carlos López</td>
-                    <td>
-                        <button class="btn btn-editar">Editar</button>
-                        <button class="btn btn-borrar">Borrar</button>
-                    </td>
                 </tr>
                 <tr>
                     <td class="folio"><strong>#INC-0103</strong></td>
@@ -67,10 +58,6 @@
                     <td class="fecha">10/11/2026</td>
                     <td class="estado-celda"><span class="badge resuelto">Resuelto</span></td>
                     <td class="responsable">Ana Torres</td>
-                    <td>
-                        <button class="btn btn-editar">Editar</button>
-                        <button class="btn btn-borrar">Borrar</button>
-                    </td>
                 </tr>
             </tbody>
         </table>
@@ -81,35 +68,50 @@
         Sistema de reporte de incidencias · FES Aragón · Ingeniería en Computación
     </footer>
 
-    <!-- ================= MODAL DE DETALLE Y ASIGNACIÓN ================= -->
+    <!-- ================= MODAL DE EDICIÓN Y ASIGNACIÓN ================= -->
     <div id="modal-detalle" class="modal d-none">
         <div class="tarjeta modal-contenido">
             <span class="cerrar-modal" id="btn-cerrar">&times;</span>
             <h2 id="modal-folio">#INC-XXXX</h2>
             
-            <div style="margin-bottom: 15px;">
-                <p><strong>Ubicación:</strong> <span id="modal-ubicacion"></span></p>
-                <p><strong>Fecha:</strong> <span id="modal-fecha"></span></p>
-                <p><strong>Estado:</strong> <span id="modal-estado"></span></p>
-                <p><strong>Descripción de la falla:</strong></p>
-                <div class="descripcion-box" id="modal-descripcion"></div>
+            <div class="campo">
+                <label for="input-descripcion">Descripción de la falla:</label>
+                <textarea id="input-descripcion"></textarea>
             </div>
 
-            <hr style="border: 0; border-top: 1px solid var(--borde); margin: 20px 0;">
+            <div class="fila">
+                <div class="campo">
+                    <label for="input-ubicacion">Ubicación:</label>
+                    <input type="text" id="input-ubicacion">
+                </div>
+                <div class="campo">
+                    <label for="input-fecha">Fecha:</label>
+                    <input type="text" id="input-fecha">
+                </div>
+            </div>
 
-            <h3>Asignar Personal de Mantenimiento</h3>
-            <div class="campo">
-                <label for="select-personal">Selecciona al responsable:</label>
-                <select id="select-personal">
-                    <option value="Sin asignar">-- Sin asignar --</option>
-                    <option value="Juan Pérez">Juan Pérez (Electricidad)</option>
-                    <option value="María Gómez">María Gómez (Plomería)</option>
-                    <option value="Carlos López">Carlos López (Plomería)</option>
-                    <option value="Ana Torres">Ana Torres (Soporte TI)</option>
-                </select>
+            <div class="fila">
+                <div class="campo">
+                    <label for="select-estado">Estado:</label>
+                    <select id="select-estado">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En proceso">En proceso</option>
+                        <option value="Resuelto">Resuelto</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="select-personal">Responsable:</label>
+                    <select id="select-personal">
+                        <option value="Sin asignar">-- Sin asignar --</option>
+                        <option value="Juan Pérez">Juan Pérez (Electricidad)</option>
+                        <option value="María Gómez">María Gómez (Plomería)</option>
+                        <option value="Carlos López">Carlos López (Plomería)</option>
+                        <option value="Ana Torres">Ana Torres (Soporte TI)</option>
+                    </select>
+                </div>
             </div>
             
-            <button id="btn-guardar-asignacion" class="boton">Guardar Asignación</button>
+            <button id="btn-guardar-cambios" class="boton">Guardar Cambios</button>
         </div>
     </div>
 
