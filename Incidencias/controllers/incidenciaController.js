@@ -119,6 +119,40 @@ const incidenciaController = {
             }
             res.json(rows);
         });
+    },
+
+    // Reasignar una incidencia a otro responsable
+    reasignarIncidencia: function(req, res) {
+        const { idIncidencia, nuevoResponsable } = req.body;
+
+        if (!idIncidencia || !nuevoResponsable) {
+            return res.status(400).json({ error: 'Faltan datos obligatorios' });
+        }
+
+        IncidenciaModel.buscarPorId(idIncidencia, (err, incidencia) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al buscar la incidencia' });
+            }
+            if (!incidencia) {
+                return res.status(404).json({ error: 'La incidencia no existe' });
+            }
+            if (incidencia.responsable === 'Sin asignar') {
+                return res.status(400).json({ error: 'La incidencia aún no tiene responsable, usa la asignación normal' });
+            }
+            if (incidencia.responsable === nuevoResponsable) {
+                return res.status(400).json({ error: 'El nuevo responsable es el mismo que el actual' });
+            }
+
+            IncidenciaModel.reasignarResponsable(idIncidencia, nuevoResponsable, function(err) {
+                if (err) {
+                    return res.status(500).json({ error: 'Error al reasignar la incidencia' });
+                }
+                res.json({
+                    success: true,
+                    message: 'Incidencia reasignada de ' + incidencia.responsable + ' a ' + nuevoResponsable
+                });
+            });
+        });
     }
 };
 

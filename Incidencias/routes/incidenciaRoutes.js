@@ -7,6 +7,7 @@ const { verificarRol } = require('../middlewares/authMiddleware');
 router.get('/incidencias', verificarRol('ADMINISTRADOR'), incidenciaController.listarIncidencias);
 router.post('/incidencias/asignar', verificarRol('ADMINISTRADOR'), incidenciaController.guardarAsignacion);
 router.get('/incidencias/filtrar', verificarRol('ADMINISTRADOR'), incidenciaController.filtrarIncidencias);
+router.put('/incidencias/reasignar', verificarRol('ADMINISTRADOR'), incidenciaController.reasignarIncidencia);
 
 // Rutas de mantenimiento
 router.get('/mis-asignaciones', verificarRol('MANTENIMIENTO'), incidenciaController.listarPorResponsable);
