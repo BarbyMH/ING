@@ -14,9 +14,9 @@ const IncidenciaModel = {
     },
 
     // Registrar una nueva incidencia vinculada al usuario (HU-03)
-    crear: (titulo, descripcion, categoria, idUsuario, callback) => {
-        const query = `INSERT INTO incidencias (titulo, descripcion, categoria, id_usuario) VALUES (?, ?, ?, ?)`;
-        db.run(query, [titulo, descripcion, categoria, idUsuario], callback);
+    crear: (titulo, descripcion, categoria, ubicacion, prioridad, idUsuario, callback) => {
+        const query = `INSERT INTO incidencias (titulo, descripcion, categoria, ubicacion, prioridad, id_usuario) VALUES (?, ?, ?, ?, ?, ?)`;
+        db.run(query, [titulo, descripcion, categoria, ubicacion, prioridad, idUsuario], callback);
     },
 
     // Asignar un responsable a una incidencia (HU-04B)
@@ -25,17 +25,43 @@ const IncidenciaModel = {
         db.run(query, [responsable, idIncidencia], callback);
     },
 
-    // Obtener incidencias filtradas por el responsable activo (HU-05)
+    // Obtener incidencias filtradas por el responsable activo
     porResponsable: (responsable, callback) => {
         const query = `SELECT * FROM incidencias WHERE responsable = ?`;
         db.all(query, [responsable], callback);
     },
 
-    // Actualizar el estado y la fecha de actualización automáticamente (HU-06A y HU-06B)
+    // Actualizar el estado y la fecha de actualización automáticamente
     actualizarEstado: (idIncidencia, estado, callback) => {
         const query = `UPDATE incidencias SET estado = ?, fecha_actualizacion = CURRENT_TIMESTAMP WHERE id = ?`;
         db.run(query, [estado, idIncidencia], callback);
-    }
+    },
+    // Obtener incidencias creadas por un usuario específico
+    porUsuario: (idUsuario, callback) => {
+        const query = `SELECT * FROM incidencias WHERE id_usuario = ?`;
+        db.all(query, [idUsuario], callback);
+    },
+
+    // Filtrar incidencias por estado, prioridad o edificio (HU-08A)
+    filtrar: (filtros, callback) => {
+        let query = `SELECT * FROM incidencias WHERE 1 = 1`;
+        const valores = [];
+
+        if (filtros.estado) {
+            query += ` AND estado = ?`;
+            valores.push(filtros.estado);
+        }
+        if (filtros.prioridad) {
+            query += ` AND prioridad = ?`;
+            valores.push(filtros.prioridad);
+        }
+        if (filtros.edificio) {
+            query += ` AND ubicacion LIKE ?`;
+            valores.push('%' + filtros.edificio + '%');
+        }
+
+        db.all(query, valores, callback);
+    },
 };
 
 module.exports = IncidenciaModel;

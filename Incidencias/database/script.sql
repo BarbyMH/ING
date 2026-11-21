@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS incidencias (
     titulo TEXT NOT NULL,
     descripcion TEXT NOT NULL,
     categoria TEXT NOT NULL,
+    ubicacion TEXT,
+    prioridad TEXT DEFAULT 'Media',
     estado TEXT DEFAULT 'Pendiente',
     responsable TEXT DEFAULT 'Sin asignar',
     id_usuario INTEGER,

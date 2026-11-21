@@ -6,6 +6,7 @@ const { verificarRol } = require('../middlewares/authMiddleware');
 // Rutas de administración
 router.get('/incidencias', verificarRol('ADMINISTRADOR'), incidenciaController.listarIncidencias);
 router.post('/incidencias/asignar', verificarRol('ADMINISTRADOR'), incidenciaController.guardarAsignacion);
+router.get('/incidencias/filtrar', verificarRol('ADMINISTRADOR'), incidenciaController.filtrarIncidencias);
 
 // Rutas de mantenimiento
 router.get('/mis-asignaciones', verificarRol('MANTENIMIENTO'), incidenciaController.listarPorResponsable);
@@ -13,5 +14,9 @@ router.put('/incidencias/estado', verificarRol('MANTENIMIENTO'), incidenciaContr
 
 // Rutas de Alumnos y Profesores
 router.post('/incidencias', verificarRol('ALUMNO_PROFESOR'), incidenciaController.crearIncidencia);
+
+// Rutas de Alumnos y Profesores (HU-03 y HU-07)
+router.post('/incidencias', verificarRol('ALUMNO_PROFESOR'), incidenciaController.crearIncidencia);
+router.get('/mis-incidencias', verificarRol('ALUMNO_PROFESOR'), incidenciaController.listarPorUsuario);
 
 module.exports = router;

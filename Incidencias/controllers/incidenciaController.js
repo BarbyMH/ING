@@ -1,6 +1,7 @@
 const IncidenciaModel = require('../models/incidenciaModel');
 
 const incidenciaController = {
+    // Listar todas las incidencias (Panel Administrador)
     listarIncidencias: function(req, res) {
         IncidenciaModel.todas((err, rows) => {
             if (err) {
@@ -10,7 +11,7 @@ const incidenciaController = {
         });
     },
 
-    // Crear nueva incidencia (HU-03)
+    // Crear nueva incidencia
     crearIncidencia: function(req, res) {
         const { titulo, descripcion, categoria } = req.body;
         const idUsuario = req.session.usuario ? req.session.usuario.id : null;
@@ -35,6 +36,23 @@ const incidenciaController = {
         });
     },
 
+    // Listar incidencias creadas por el alumno/profesor activo
+    listarPorUsuario: function(req, res) {
+        const idUsuario = req.session.usuario ? req.session.usuario.id : null;
+
+        if (!idUsuario) {
+            return res.status(401).json({ error: 'No autorizado o sesión expirada' });
+        }
+
+        IncidenciaModel.porUsuario(idUsuario, (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al obtener el historial de incidencias' });
+            }
+            res.json(rows);
+        });
+    },
+
+    // Listar incidencias asignadas al técnico de mantenimiento activo
     listarPorResponsable: function(req, res) {
         const responsableNombre = req.session.usuario ? req.session.usuario.nombre : null;
         if (!responsableNombre) {
@@ -48,6 +66,7 @@ const incidenciaController = {
         });
     },
 
+    // Actualizar el estado de la incidencia con fecha automática
     actualizarEstado: function(req, res) {
         const { idIncidencia, estado } = req.body;
         if (!idIncidencia || !estado) {
@@ -61,6 +80,7 @@ const incidenciaController = {
         });
     },
 
+    // Guardar asignación de responsable
     guardarAsignacion: function(req, res) {
         const { idIncidencia, responsable } = req.body;
         if (!idIncidencia || !responsable) {
