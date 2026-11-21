@@ -13,18 +13,27 @@ const incidenciaController = {
 
     // Crear nueva incidencia
     crearIncidencia: function(req, res) {
-        const { titulo, descripcion, categoria } = req.body;
+        const { descripcion, tipo, prioridad, aula, edificio } = req.body;
         const idUsuario = req.session.usuario ? req.session.usuario.id : null;
 
         if (!idUsuario) {
             return res.status(401).json({ error: 'No autorizado o sesión expirada' });
         }
 
-        if (!titulo || !descripcion || !categoria) {
-            return res.status(400).json({ error: 'Faltan datos obligatorios (título, descripción o categoría)' });
+        // Los formularios envian tipo, y el del profesor envia aula y edificio
+        const categoria = req.body.categoria || tipo;
+        let ubicacion = req.body.ubicacion;
+        if (!ubicacion && edificio && aula) {
+            ubicacion = edificio + ', aula ' + aula;
         }
 
-        IncidenciaModel.crear(titulo, descripcion, categoria, idUsuario, function(err) {
+        if (!descripcion || !categoria || !ubicacion || !prioridad) {
+            return res.status(400).json({ error: 'Faltan datos obligatorios (descripción, tipo, ubicación o prioridad)' });
+        }
+
+        const titulo = req.body.titulo || (categoria + ' - ' + ubicacion);
+
+        IncidenciaModel.crear(titulo, descripcion, categoria, ubicacion, prioridad, idUsuario, function(err) {
             if (err) {
                 return res.status(500).json({ error: 'Error al registrar la incidencia en la base de datos' });
             }
@@ -91,6 +100,24 @@ const incidenciaController = {
                 return res.status(500).json({ error: 'Error al guardar la asignación' });
             }
             res.json({ success: true, message: 'Responsable asignado correctamente' });
+        });
+    },
+
+    // Filtrar y ordenar incidencias (Panel Administrador)
+    filtrarIncidencias: function(req, res) {
+        const filtros = {
+            estado: req.query.estado,
+            prioridad: req.query.prioridad,
+            edificio: req.query.edificio,
+            orden: req.query.orden,
+            direccion: req.query.direccion
+        };
+
+        IncidenciaModel.filtrar(filtros, (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al filtrar las incidencias' });
+            }
+            res.json(rows);
         });
     }
 };

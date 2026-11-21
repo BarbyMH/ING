@@ -60,6 +60,16 @@ const IncidenciaModel = {
             valores.push('%' + filtros.edificio + '%');
         }
 
+        // Solo se permiten estas formas de ordenar (HU-08B)
+        const columnas = {
+            fecha: 'fecha_creacion',
+            estado: 'estado',
+            prioridad: `CASE prioridad WHEN 'Alta' THEN 1 WHEN 'Media' THEN 2 ELSE 3 END`
+        };
+        const columna = columnas[filtros.orden] || 'fecha_creacion';
+        const direccion = filtros.direccion === 'asc' ? 'ASC' : 'DESC';
+        query += ` ORDER BY ${columna} ${direccion}`;
+
         db.all(query, valores, callback);
     },
 };
